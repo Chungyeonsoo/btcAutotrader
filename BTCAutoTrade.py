@@ -7,8 +7,6 @@ import time
 import pyupbit
 import datetime
 
-# access = "your-access"
-# secret = "your-secret"
 access = "jXgPJ1jbfQBzFIhHoFUh9ZIue2Qx3xbfxK8xAtz8"          # 본인 값으로 변경
 secret = "doJrpomV6oxsnlP2mNjkIOHklt7NNBFuHjpakaBv"   
 
@@ -54,23 +52,61 @@ while True:
     try:
         now = datetime.datetime.now()
         start_time = get_start_time("KRW-BTC")
+        start_time = get_start_time("KRW-DOGE")
         end_time = start_time + datetime.timedelta(hours=4)
 
         if start_time < now < (end_time - datetime.timedelta(seconds=10)):
             target_price = get_target_price("KRW-BTC", 0.005)
             current_price = get_current_price("KRW-BTC")
             limit_price = get_limit_price("KRW-BTC", 0.5)
+            
+            target_price_DOGE = get_target_price("KRW-DOGE", 0.005)
+            current_price = get_current_price("KRW-DOGE")
+            limit_price = get_limit_price("KRW-DOGE", 0.5)
+            
             if target_price < current_price < limit_price:
                 krw = get_balance("KRW")
-                if krw > 5000:
-                    upbit.buy_market_order("KRW-BTC", krw*0.9995)
-                    print('buy')
+                dist_krw = (krw * 0.5) - 100
+                left_krw = krw - dist_krw - 100
+                if dist_krw > 5000:
+                    upbit.buy_market_order("KRW-BTC", dist_krw*0.9995)
+                    print('buy BTC')
+                if left_krw > 5000:
+                    upbit.buy_market_order("KRW-DOGE", left_krw*0.9995)
+                    print('buy DOGE')
                     
         else:
             btc = get_balance("BTC")
+            doge = get_balance("DOGE")
+            
             if btc > 0.00001:
                 upbit.sell_market_order("KRW-BTC", btc*0.9995)
-                print('sold')
+                print('BTC sold')
+            if doge > 1:
+                upbit.sell_market_order("KRW-DOGE", DOGE*0.9995)
+                print('DOGE sold')
+                
+        time.sleep(1)
+    try:
+        now = datetime.datetime.now()
+        start_time = get_start_time("KRW-DOGE")
+        end_time = start_time + datetime.timedelta(hours=4)
+
+        if start_time < now < (end_time - datetime.timedelta(seconds=10)):
+            target_price = get_target_price("KRW-DOGE", 0.005)
+            current_price = get_current_price("KRW-DOGE")
+            limit_price = get_limit_price("KRW-DOGE", 0.5)
+            if target_price < current_price < limit_price:
+                krw = get_balance("KRW")
+                if krw > 500:
+                    upbit.buy_market_order("KRW-DOGE", krw*0.9995)
+                    print('buy')
+                    
+        else:
+            DOGE = get_balance("DOGE")
+            if btc > 0.00001:
+                upbit.sell_market_order("KRW-DOGE", DOGE*0.9995)
+                print('selled')
                 
         time.sleep(1)
     except Exception as e:
