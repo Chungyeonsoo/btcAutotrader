@@ -65,8 +65,6 @@ while True:
                 if krw > 5000:
                     upbit.buy_market_order("KRW-BTC", krw*0.9995)
                     print('buy')
-                else:
-                    print('no cash')
                     
         else:
             btc = get_balance("BTC")
@@ -78,4 +76,3 @@ while True:
     except Exception as e:
         print(e)
         time.sleep(1)
-
